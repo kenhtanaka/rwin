@@ -2,17 +2,26 @@
 ##
 ## FILE: rwin.pl
 ##
-## PURPOSE: Open a remote window to the named machine using a gnome-terminal
+## PURPOSE: Open a remote window to the named machine using a gnome-terminal.
+##          Uses gconftool-2 to set foreground text and window background colors
+##          so that ssh sessions are color coded based on remote destination.
 ##
 ## USAGE: rwin.pl -r
-##        {Set up gnome-terminal profiles, only done after editing the %machines
-##         list in this file.}
+##        {Set up gnome-terminal profiles, only needed one time after editing the
+##         %machines list in this file.}
 ##
 ##        rwin.pl <machine name>
 ##        {Open a new gnome-terminal and ssh to that system}
 ##
 ##        rwin.pl
 ##        {Present a menu of systems to log into. '0' or CTRL-C exits.}
+##
+##        This script is able to configure existing gnome-terminal color profiles,
+##        but does not create them. This script will ignore the Default profile.
+##        Manually create as many additional profiles as there are entries in the
+##        %machines configuration list.
+##
+## AUTHOR: Ken Tanaka
 
 ## /usr/bin/showrgb | less can help you choose colors.
 ## Or use https://www.allscoop.com/tools/Web-Colors/web-colors.php
@@ -28,23 +37,30 @@
 ##     'MistyRose'
 ##     '#bbbbffffffff'
 ##     '#bbbb,ffff,ffff'
+
+## AKA: Also-Known-As field is just a comment displayed in menu mode.
+##      You can include an IP address if you want to visually compare to the 'host'
+##      command output for security or password purposes.
 %machines = (
     ##'example' => {    ACCESS => 'example.ngdc.noaa.gov',
     ##                  AKA    => 'example format, 140.172.180.11',
     ##                  COLORS => ['foreground text', 'window background'] },
-    'lion'      => {    ACCESS => 'lion.ngdc.noaa.gov',
+    'lion'      => {    ACCESS => 'lion',
                         AKA    => '"cron server", 140.172.180.54',
                         COLORS => ['red4', '#fffff0'] },
-    'tabby'     => {    ACCESS => 'tabby.ngdc.noaa.gov',
-                        AKA    => '140.172.179.192',
+    'tabby'     => {    ACCESS => 'tabby',
+                        AKA    => 'local workstation',
                         COLORS => ['black', '#eeddcc'] },
 );
 
-#%machines = (
-#    'storm'     => {    ACCESS => 'storm.ngdc.noaa.gov',
-#                        AKA    => '"Acceptance", 140.172.180.108',
-#                        COLORS => ['blue1', '#bff'] },
-#);
+$UseTestList = 0;
+if ($UseTestList) {
+    %machines = (
+        'test'     => {    ACCESS => 'test',
+                           AKA    => 'test uncommented',
+                           COLORS => ['blue1', '#bb,ee,ff'] },
+    );
+}
 
 
 $Reconfigure = 0;
@@ -66,7 +82,6 @@ $sshCmd = '/usr/bin/ssh -Y';
 #$Geom = '-geom 80x40+20+20';
 $Geom = '--geometry 140x40+20+20';
 #$Font = '-font "-adobe-courier-medium-r-*-*-18-*-*-*-*-*-iso8859-1"';
-my $gtProfileId;
 $gconftool = '/usr/bin/gconftool-2';
 $gtermCmd = qq'/usr/bin/gnome-terminal $Geom --title="NAME" --tab-with-profile-internal-id="PROFILE" --command="$sshCmd ACCESS" &';
 
@@ -97,6 +112,7 @@ if ($profileCount < $machineCount) {
 }
 
 ## Set up gnome-terminal parameters: visible_name, foreground_color, background_color
+my $gtProfileId;
 my @machList = (sort keys %machines);
 if ($Reconfigure) {
     $i = 0;
