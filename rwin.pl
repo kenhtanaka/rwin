@@ -114,12 +114,14 @@ if ($profileCount < $machineCount) {
 ## Set up gnome-terminal parameters: visible_name, foreground_color, background_color
 my $gtProfileId;
 my @machList = (sort keys %machines);
-if ($Reconfigure) {
-    $i = 0;
-    foreach $m (@machList) {
-        $gtProfileId = "Profile$i";
+$i = 0;
+foreach $m (@machList) {
+    $gtProfileId = "Profile$i";
+    $machines{$m}{PROFILE} = $gtProfileId;
+    ## Set up gnome-terminal parameters:
+    ## visible_name, foreground_color, background_color
+    if ($Reconfigure) {
         print '=' x 22 . " Configuring '$m' in profile $gtProfileId\n" if $Debugging;
-        $machines{$m}{PROFILE} = $gtProfileId;
         my $fgcolor = $machines{$m}{COLORS}[0];
         print "fgcolor before: $fgcolor, " if $Debugging;
         $fgcolor =~ s/,//g; ## strip out any commas
@@ -146,9 +148,14 @@ if ($Reconfigure) {
         print '-' x 22 if $Debugging;
         print "\ngconftoolCmd = $gconftoolCmd\n" if $Debugging;
         system($gconftoolCmd);
-        $i++;
     }
+    $i++;
+}
     
+if ($Reconfigure) {
+    ## Set the name of unused profiles to "..unused #.." so previous names aren't
+    ## left behind if the configured list gets shorter. This avoids duplicate names 
+    ## that can be confusing.
     if ($i < $profileCount) {
         for (; $i < $profileCount; $i++) {
             $gtProfileId = "Profile$i";
