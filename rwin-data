@@ -1,0 +1,44 @@
+## don't do access.ngdc.noaa.gov in this script, since it doesn't work correctly with the '-Y' option for ssh
+
+## /usr/bin/showrgb | less can help you choose colors.
+## http://www.color-hex.com/color-names.html
+## Or use https://www.allscoop.com/tools/Web-Colors/web-colors.php
+
+#NAME           | ACCESS                        | AKA                       | IP                | TEXT_FG           | TEXT_BG
+nce1            | ken@nceivm1.colorado.edu      |                           | 128.138.136.101   | black             | #ccffee
+nce2            | ken@nceivm2.colorado.edu      |                           | 128.138.136.102   | black             | #bbffdd
+nce3            | ken@nceivm3.colorado.edu      |                           | 128.138.136.103   | black             | #aaffcc
+nce4            | ken@nceivm4.colorado.edu      |                           | 128.138.136.104   | black             | #99ffbb
+
+#acc-engines     | acc-engines       | fortuna                   | 140.172.180.53    | black             | cornsilk
+#acc-intra       | acc-intra         | rascal                    | 140.172.179.36    | black             | #f0ffcc
+#acc-web         | acc-web           | imperial                  | 140.172.184.23    | black             | #cc,ee,ff
+#apex            | apex              | wwwdev                    | 140.172.180.11    | black             | #eeffe8
+#arete           | arete             | intranet                  | 140.172.180.12    | Purple4           | SlateGray1
+#app1            | app1-co-dmz       | Prod apps                 | 140.172.186.121   | #990000           | #ddeeff
+#app2            | app2-co-dmz       | Prod apps                 | 140.172.186.121   | #990000           | #eeccff
+#app3            | app3-co-intra     | Prod apps intranet, stout | 140.172.186.152   | #990000           | #ffccff
+#caracal         | caracal           |                           | 140.172.180.57    | black             | #ffe8e8
+#cavern          | cavern            |                           | 140.172.180.43    | black             | #e8ffee
+#colocolo        | colocolo          | metadata                  | 140.172.184.17    | black             | #eedd99
+#dev-ansible     | dev-ansible       | nexus                     | 140.172.180.109   | #006600           | #eedd99
+#drift           | drift             | MB processing             | 140.172.180.103   | #660066           | #33eeaa
+#helios          | helios            | spadestest                | 140.172.180.73    | black             | #fafad2
+#int-engines     | int-engines       | oskar                     | 140.172.180.25    | black             | #ccffbb
+#int-intra       | int-intra         | dale                      | 140.172.180.23    | black             | #ddffee
+#int-web         | avery             | integration               | 140.172.180.24    | black             | #ccffee
+#levity          | levity            | ingest processors         | 140.172.180.112   | #990000           | #eeddff
+#lion            | lion              | cron server               | 140.172.180.54    | black             | #fffff0
+#oldstyle        | oldstyle          | Legacy appserver          | 140.172.180.9     | red3              | #bbffff
+#polestar        | polestar          | protocol server           | 140.172.180.113   | black             | #ffee66
+#saddle          | saddle            | Prod web                  | 140.172.180.14    | #990000           | #ffddee
+#semprocess      | semprocess        |                           | 140.172.180.59    | black             | PaleTurquoise
+#session         | session           |                           | 140.172.180.110   | black             | #ffeef0
+#shift           | shift             | next processors           | 140.172.180.111   | #990000           | #ffeedd
+#sp-cs1          | sp-cs1            |                           | 140.172.180.84    | black             | #d2d2fa
+#sp-mag1         | sp-mag1           |                           | 140.172.180.85    | black             | #fad2fa
+#sp-sei1         | sp-sei1           |                           | 140.172.180.86    | black             | #d2fad2
+#summit          | summit            | wwwtest                   | 140.172.180.10    | black             | #ffdddd
+#war-test        | war-test          | www RHEL 7 test box       | 140.172.180.3     | green2            | #333333
+#web3            | web3-co-test      |                           | 140.172.180.111   | #880000           | #ffeedd
+#xcellis4        | xcellis4          | internal ars              | 140.172.182.214   | #AA0000           | #ffff99
