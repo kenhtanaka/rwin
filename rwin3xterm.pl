@@ -2,7 +2,7 @@
 ##
 ## FILE: rwin3.pl
 ##
-## PURPOSE: Open a remote window to the named machine using xterms
+## PURPOSE: Open a remote window to the named machine
 ##
 ## Mac OS X version
 ##
@@ -28,14 +28,16 @@
 ##     '#bbbb,ffff,ffff'
 
 my $machinesFile = "$ENV{HOME}/bin/rwin-data";
+$linuxUser = 'ktanaka';
 $DefaultDomain = '.ngdc.noaa.gov';
 $hostCmd = '/usr/bin/host';
-$sshCmd = '/usr/bin/ssh -Y';
+$sshCmd = '/usr/bin/ssh -Y -o VisualHostKey=yes';
 $SavedLines = '-sl 2000';
 #$Geom = '-geom 80x40+20+20';
-$Geom = '-geom 140x40-20-20';
+$Geom = '-geom 120x40-20-20';
 $Font = '-font "-adobe-courier-medium-r-*-*-18-*-*-*-*-*-iso8859-1"';
-$xtermCmd = qq'/usr/X11R6/bin/xterm $Geom $Font $SavedLines -sb -fg "FGCOLOR" -bg "BGCOLOR" -T "NAME" -e $sshCmd ACCESS &';
+$xtermCmd = qq'xterm $Geom $Font $SavedLines -sb -fg "FGCOLOR" -bg "BGCOLOR" -T "NAME" -e $sshCmd ACCESS &';
+#$xtermCmd = qq'$sshCmd ACCESS';
 $Debugging = 0;
 
 ##*****************************************************************************
@@ -80,7 +82,7 @@ if ($Debugging) {
         #print "mrec->{ACCESS}=$mrec->{ACCESS}\n";
         printf "%-15s | %-27s | %-20s | %-15s | %-15s | %s\n", $m, $mrec->{ACCESS}, $mrec->{AKA}, $mrec->{IP}, $mrec->{FG}, $mrec->{BG};
     }
-    exit 0;
+    #exit 0;
 }
 
 if (scalar(@ARGV) and not exists($machines{$ARGV[0]})) {
@@ -108,9 +110,9 @@ if (not scalar(@ARGV) or not exists($machines{$ARGV[0]})) {
 }
 
 $lookupHost = $machines{$choice}{ACCESS};
-$lookupHost =~ /.*@(\w+)/ and do {
-    $lookupHost = $1;
-};
+#$lookupHost =~ /.*@(\w+)/ and do {
+#    $lookupHost = $1;
+#};
 
 if ($lookupHost !~ /.(gov|edu|net|org|mil|com)$/) {
     $lookupHost .= $DefaultDomain;
@@ -125,10 +127,10 @@ $bgcolor =~ s/,//g; ## strip out any commas
 $xtermCmd =~ s/NAME/$choice/;
 $xtermCmd =~ s/FGCOLOR/$fgcolor/;
 $xtermCmd =~ s/BGCOLOR/$bgcolor/;
-$xtermCmd =~ s/ACCESS/$machines{$choice}{ACCESS}/;
+$xtermCmd =~ s/ACCESS/$linuxUser\@$lookupHost/;
 
 print `$hostCmd $lookupHost`;
 
-#print"system($xtermCmd)\n";
+print"system($xtermCmd)\n" if $Debugging;
 system($xtermCmd);
 
