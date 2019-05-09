@@ -29,7 +29,8 @@
 
 #done to here
 
-my $machinesFile = "$ENV{HOME}/bin/rwin-data";
+#my $machinesFile = "$ENV{HOME}/bin/rwin-data";
+my $machinesFile = "$ENV{HOME}/src/git-github/rwin/rwin-data";
 $linuxUser = 'ktanaka';
 $DefaultDomain = '.ngdc.noaa.gov';
 $hostCmd = '/usr/bin/host';
@@ -40,7 +41,7 @@ $Geom = '-geom 120x40-20-20';
 $Font = '-font "-adobe-courier-medium-r-*-*-18-*-*-*-*-*-iso8859-1"';
 $xtermCmd = qq'xterm $Geom $Font $SavedLines -sb -fg "FGCOLOR" -bg "BGCOLOR" -T "NAME" -e $sshCmd ACCESS &';
 #$xtermCmd = qq'$sshCmd ACCESS';
-$Debugging = 0;
+$Debugging = 1;
 
 ##*****************************************************************************
 ##
@@ -76,6 +77,7 @@ while (not eof($datafile)) {
 close $datafile;
 
 if ($Debugging) {
+    printf "%-15s | %-27s | %-20s | %-15s | %-15s | %s\n", 'machine', 'ACCESS', 'AKA', 'IP', 'FG', 'BG';
     my @machList = (sort keys %machines);
     foreach $m (@machList) {
         $mrec = $machines{$m};
