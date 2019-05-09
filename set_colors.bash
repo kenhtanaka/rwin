@@ -21,6 +21,19 @@ function grep_apple_color {
     grep "$*" ${HOME}/.colors.tsv
 }
 
+# A colorname starts with newline or ',' and ends with a ',' or tab since there may be
+# comma separated variations on a colorname at the start of a line
+# example:
+#   black	#000000	0	0	0	{0, 0, 0}
+#   misty rose,MistyRose	#ffe9e6	255	233	230	{65535, 59881, 59110}
+#
+# Replacing tabs with '<t>' and spaces with '_':
+#   misty_rose,MistyRose<t>#ffe9e6<t>255<t>233<t>230<t>{65535,_59881,_59110}
+#   1                      2         3     4     5     \_ 6:apple_color ___/
+# RETURN the three digits in braces at the end (6th tab separated field)
+# field 2 is the hex color
+# fields 2,4,5 are the equivalent RGB colors
+# field 6 is composed of each RGB value * 257
 function get_apple_color {
     grep -v '^#' ${HOME}/.colors.tsv | egrep -i "(^|,)$*(,|\t)" | cut -f 6
 }
