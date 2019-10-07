@@ -1,4 +1,4 @@
-#name   #hexcolor   red    grn    blu   {apple color}
+#name	#hexcolor	red	grn	blu	{apple color}
 LightPink1	#ffbdc5	255	189	197	{65535, 48573, 50629}
 pink4	#9d777f	157	119	127	{40349, 30583, 32639}
 pink3	#d7a3ad	215	163	173	{55255, 41891, 44461}
@@ -265,7 +265,7 @@ snow3	#d6d3d3	214	211	211	{54998, 54227, 54227}
 snow2	#f1eded	241	237	237	{61937, 60909, 60909}
 snow1	#fffbfb	255	251	251	{65535, 64507, 64507}
 thistle	#e0cbdf	224	203	223	{57568, 52171, 57311}
-MediumPurple,medium purple  #a488e2	164	136	226	{42148, 34952, 58082}
+MediumPurple,medium purple	#a488e2	164	136	226	{42148, 34952, 58082}
 purple	#932092	147	32	146	{37779, 8224, 37522}
 blue violet,BlueViolet	#9d4be7	157	75	231	{40349, 19275, 59367}
 dark violet,DarkViolet	#a630db	166	48	219	{42662, 12336, 56283}
