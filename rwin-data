@@ -5,10 +5,11 @@
 ## Or use https://www.allscoop.com/tools/Web-Colors/web-colors.php
 
 #NAME           | ACCESS                        | AKA                       | IP                | TEXT_FG           | TEXT_BG
-nce1            | ken@nceivm1.colorado.edu      |                           | 128.138.136.101   | black             | #ccffee
-nce2            | ken@nceivm2.colorado.edu      |                           | 128.138.136.102   | black             | #bbffdd
-nce3            | ken@nceivm3.colorado.edu      |                           | 128.138.136.103   | black             | #aaffcc
-nce4            | ken@nceivm4.colorado.edu      |                           | 128.138.136.104   | black             | #99ffbb
+nce1            | ken@nceivm1.colorado.edu      | uno                       | 128.138.136.101   | #010101           | #ccffee
+nce2            | nceivm2.colorado.edu          | dos                       | 128.138.136.102   | black             | #9e1e62
+nce3            | ken@nceivm3.colorado.edu      | tres                      | 128.138.136.103   | black             | red
+nce4            | ken@nceivm4.colorado.edu      | quatro                    | 128.138.136.104   | black             | none
+local           | localhost                     | logintest                 | 127.0.0.1         | orange1           | blue4
 
 #acc-engines     | acc-engines       | fortuna                   | 140.172.180.53    | black             | cornsilk
 #acc-intra       | acc-intra         | rascal                    | 140.172.179.36    | black             | #f0ffcc
