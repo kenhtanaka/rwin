@@ -27,21 +27,20 @@
 ##     '#bbbbffffffff'
 ##     '#bbbb,ffff,ffff'
 
-#done to here
-
 #my $machinesFile = "$ENV{HOME}/bin/rwin-data";
-my $machinesFile = "$ENV{HOME}/src/git-github/rwin/rwin-data";
-$linuxUser = 'ktanaka';
-$DefaultDomain = '.ngdc.noaa.gov';
-$hostCmd = '/usr/bin/host';
-$sshCmd = '/usr/bin/ssh -Y -o VisualHostKey=yes';
-$SavedLines = '-sl 2000';
-#$Geom = '-geom 80x40+20+20';
-$Geom = '-geom 120x40-20-20';
-$Font = '-font "-adobe-courier-medium-r-*-*-18-*-*-*-*-*-iso8859-1"';
-$xtermCmd = qq'xterm $Geom $Font $SavedLines -sb -fg "FGCOLOR" -bg "BGCOLOR" -T "NAME" -e $sshCmd ACCESS &';
-#$xtermCmd = qq'$sshCmd ACCESS';
-$Debugging = 1;
+my $machinesFile = "$ENV{HOME}/src/git/github/rwin/rwin-data";
+my $colorsFile = "$ENV{HOME}/src/git/github/rwin/colors.txt";
+my $linuxUser = 'tanakak'; ## default if not in rwin-data access column as 'user@host'
+#my $DefaultDomain = '.ngdc.noaa.gov';
+my $DefaultDomain = '';
+my $hostCmd = '/usr/bin/host';
+#my $sshCmd = '/usr/bin/ssh -Y';
+my $sshCmd = '/bin/echo';
+
+my $termCmd = qq!osascript -e 'tell application "Terminal" to do script "exec ssh ACCESS"'!
+  . qq! -e 'tell application "Terminal" to set normal text color of window 1 to FGCOLOR'!
+  . qq! -e 'tell application "Terminal" to set background color of window 1 to BGCOLOR'!;
+my $Debugging = 1;
 
 ##*****************************************************************************
 ##
@@ -63,9 +62,9 @@ while (not eof($datafile)) {
     chomp $row;
     next if ($row =~ /^#/); ## Skip comments
     next if ($row =~ /^$/); ## Skip blank lines
-    ($name, $access, $aka, $ip, $fg, $bg) = split(/\s*\|\s*/, $row);
+    my ($name, $access, $aka, $ip, $fg, $bg) = split(/\s*\|\s*/, $row);
     print join(' , ', $name, $access, $aka, $ip, $fg, $bg). "\n" if $Debugging;
-    $mrec = { ## Create a machine record
+    my $mrec = { ## Create a machine record
         ACCESS  => $access,
         AKA     => $aka,
         IP      => $ip,
@@ -123,18 +122,70 @@ if ($lookupHost !~ /.(gov|edu|net|org|mil|com)$/) {
 }
 
 my $fgcolor = $machines{$choice}{FG};
-$fgcolor =~ s/,//g; ## strip out any commas
+my $appleFgColor = &getAppleColor($fgcolor, "{0, 0, 0}");
 
 my $bgcolor = $machines{$choice}{BG};
-$bgcolor =~ s/,//g; ## strip out any commas
+my $appleBgColor = &getAppleColor($bgcolor, "{65535, 65535, 65535}");
 
-$xtermCmd =~ s/NAME/$choice/;
-$xtermCmd =~ s/FGCOLOR/$fgcolor/;
-$xtermCmd =~ s/BGCOLOR/$bgcolor/;
-$xtermCmd =~ s/ACCESS/$linuxUser\@$lookupHost/;
+$termCmd =~ s/NAME/$choice/;
+$termCmd =~ s/FGCOLOR/$appleFgColor/;
+$termCmd =~ s/BGCOLOR/$appleBgColor/;
+if ($lookupHost =~ /\s*(.*)\@(.*)/) {
+  $linuxUser = $1;
+  $justHost = $2;
+} else {
+    $justHost = $lookupHost;
+}
+print "linuxUser='$linuxUser', justHost='$justHost'\n" if $Debugging;
+$termCmd =~ s/ACCESS/$linuxUser\@$justHost/;
 
-print `$hostCmd $lookupHost`;
+print `$hostCmd $justHost`;
 
-print"system($xtermCmd)\n" if $Debugging;
-system($xtermCmd);
+print"system($termCmd)\n" if $Debugging;
+system($termCmd);
 
+##*****************************************************************
+##
+##  getAppleColor()
+##
+##  &getAppleColor(color, defaultAppleColor)
+##
+##  Convert the color into an apple color. The color can be either
+##  - #aabbcc Red-Green-Bue hex color
+##  - colorName (camelcase, no spaces)
+##  looks up color name from colors.txt
+##  defaultAppleColor is returned if the color is not found in colors.txt
+##
+##*****************************************************************
+sub getAppleColor {
+  local($colorName, $defaultAppleColor) = @_;
+  local $appleColor;
+  print "look up color $colorName, default is $defaultAppleColor\n" if $Debugging;
+  $colorName =~ s/,//g; ## strip out any commas
+  local $hexColorPattern = '#([0-9a-fA-F]{2}),?([0-9a-fA-F]{2}),?([0-9a-fA-F]{2})';
+  local ($r, $g, $b);
+  if ($colorName =~ /${hexColorPattern}/) {
+    $r = $1;
+    $g = $2;
+    $b = $3;
+    print "r=$r, g=$g, b=$b\n" if $Debugging;
+    $appleColor = '{' . hex($r)*257 . ', ' . hex($g)*257 . ', ' . hex($b)*257 . '}';
+  } else {
+    print "grep -i \"^${colorName}\\s\" ${colorsFile}\n" if $Debugging;
+    $hexColor = `grep -i "^${colorName}\\s" ${colorsFile}`;
+    chomp($hexColor);
+    print "grep hexColor = '$hexColor'\n" if $Debugging;
+    if ($hexColor =~ /.*\s${hexColorPattern}/) {
+      $r = $1;
+      $g = $2;
+      $b = $3;
+      print "grep hex r=$r, g=$g, b=$b\n" if $Debugging;
+      $appleColor = '{' . hex($r)*257 . ', ' . hex($g)*257 . ', ' . hex($b)*257 . '}';
+    } else {
+      print "using default color $defaultAppleColor\n" if $Debugging;
+      $appleColor = $defaultAppleColor;
+    }
+  }
+  print "appleColor = '$appleColor'\n" if $Debugging;
+  return $appleColor;
+}
