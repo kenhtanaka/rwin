@@ -47,10 +47,10 @@ if (1) { ## Production: Use installed files
     $Debugging = 1;
 }
 my $hostCmd = '/usr/bin/host';
-#my $sshCmd = '/usr/bin/ssh -Y';
-my $sshCmd = '/bin/echo';
+my $sshCmd = '/usr/bin/ssh -Y';
+#my $sshCmd = '/bin/echo';
 
-my $termCmd = qq!osascript -e 'tell application "Terminal" to do script "${agentCmd}exec ssh ACCESS"'!
+my $termCmd = qq!osascript -e 'tell application "Terminal" to do script "${agentCmd}exec ${sshCmd} ACCESS"'!
   . qq! -e 'tell application "Terminal" to set normal text color of window 1 to FGCOLOR'!
   . qq! -e 'tell application "Terminal" to set background color of window 1 to BGCOLOR'!;
 
