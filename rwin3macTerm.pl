@@ -27,20 +27,32 @@
 ##     '#bbbbffffffff'
 ##     '#bbbb,ffff,ffff'
 
-#my $machinesFile = "$ENV{HOME}/bin/rwin-data";
-my $machinesFile = "$ENV{HOME}/src/git/github/rwin/rwin-data";
-my $colorsFile = "$ENV{HOME}/src/git/github/rwin/colors.txt";
-my $linuxUser = 'tanakak'; ## default if not in rwin-data access column as 'user@host'
-#my $DefaultDomain = '.ngdc.noaa.gov';
-my $DefaultDomain = '';
+my $machinesFile;
+my $colorsFile;
+my $linuxUser;
+my $DefaultDomain;
+my $Debugging = 0;
+my $agentCmd = '';
+if (1) { ## Production: Use installed files
+    $machinesFile = "$ENV{HOME}/bin/rwin-data";
+    $colorsFile = "$ENV{HOME}/bin/colors.txt";
+    $linuxUser = 'ktanaka'; ## default if not in rwin-data access column as 'user@host'
+    $DefaultDomain = '.ngdc.noaa.gov';
+    $agentCmd = '. ~/.ssh/agent; ';
+} else { ## Development: Use development files
+    $machinesFile = "$ENV{HOME}/src/git/github/rwin/rwin-data";
+    $colorsFile = "$ENV{HOME}/src/git/github/rwin/colors.txt";
+    $linuxUser = 'tanakak'; ## default if not in rwin-data access column as 'user@host'
+    $DefaultDomain = '';
+    $Debugging = 1;
+}
 my $hostCmd = '/usr/bin/host';
 #my $sshCmd = '/usr/bin/ssh -Y';
 my $sshCmd = '/bin/echo';
 
-my $termCmd = qq!osascript -e 'tell application "Terminal" to do script "exec ssh ACCESS"'!
+my $termCmd = qq!osascript -e 'tell application "Terminal" to do script "${agentCmd}exec ssh ACCESS"'!
   . qq! -e 'tell application "Terminal" to set normal text color of window 1 to FGCOLOR'!
   . qq! -e 'tell application "Terminal" to set background color of window 1 to BGCOLOR'!;
-my $Debugging = 1;
 
 ##*****************************************************************************
 ##
