@@ -32,7 +32,7 @@ function grep_apple_color {
 #   1                      2         3     4     5     \_ 6:apple_color ___/
 # RETURN the three digits in braces at the end (6th tab separated field)
 # field 2 is the hex color
-# fields 2,4,5 are the equivalent RGB colors
+# fields 3,4,5 are the equivalent RGB colors
 # field 6 is composed of each RGB value * 257
 function get_apple_color {
     grep -v '^#' ${HOME}/.colors.tsv | egrep -i "(^|,)$*(,|\t)" | cut -f 6
