@@ -14,6 +14,7 @@
 ## /usr/bin/showrgb | less can help you choose colors.
 ## http://www.color-hex.com/color-names.html
 ## Or use https://www.allscoop.com/tools/Web-Colors/web-colors.php
+## Or use https://www.htmlcsscolor.com/hex/66B348
 
 ## Commas can be inserted into colors for readability: #ff,e8,e8
 ## Color examples:
@@ -38,7 +39,7 @@ if (1) { ## Production: Use installed files
     $colorsFile = "$ENV{HOME}/bin/colors.txt";
     $linuxUser = 'ktanaka'; ## default if not in rwin-data access column as 'user@host'
     $DefaultDomain = '.ngdc.noaa.gov';
-    $agentCmd = '. ~/.ssh/agent; ';
+    $agentCmd = '. ~/.ssh/agent;';
 } else { ## Development: Use development files
     $machinesFile = "$ENV{HOME}/src/git/github/rwin/rwin-data";
     $colorsFile = "$ENV{HOME}/src/git/github/rwin/colors.txt";
@@ -46,11 +47,17 @@ if (1) { ## Production: Use installed files
     $DefaultDomain = '';
     $Debugging = 1;
 }
+
+my $exec = ''; ## no exec: window stays open after command completes
+if (1) { ## Use exec: ssh window closes when done
+  $exec = 'exec';
+}
+
 my $hostCmd = '/usr/bin/host';
 my $sshCmd = '/usr/bin/ssh -Y';
 #my $sshCmd = '/bin/echo';
 
-my $termCmd = qq!osascript -e 'tell application "Terminal" to do script "${agentCmd}exec ${sshCmd} ACCESS"'!
+my $termCmd = qq!osascript -e 'tell application "Terminal" to do script "${agentCmd} ${exec} ${sshCmd} ACCESS"'!
   . qq! -e 'tell application "Terminal" to set normal text color of window 1 to FGCOLOR'!
   . qq! -e 'tell application "Terminal" to set background color of window 1 to BGCOLOR'!;
 
